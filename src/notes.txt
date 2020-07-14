@@ -1,0 +1,15 @@
+    this.state.datasets[0].data = [
+      this.state.newConfirmed,
+      this.state.totalConfirmed,
+      this.state.newDeaths,
+      this.state.totalDeaths,
+      this.state.newRecovered,
+      this.state.totalRecovered,
+    ];
+     this.state.datasets[0].data.map()
+    this.state.datasets[0].data.map((x) => console.log(x * 2));
+    this.state.datasets[0].data.map((x, index) => console.log(x * 2, index));
+    this.state.datasets[0].data.map((x, index) =>
+      console.log(this.state.datasets[0].data[index]);
+     
+    );
