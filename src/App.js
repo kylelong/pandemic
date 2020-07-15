@@ -14,6 +14,9 @@ class App extends Component {
       newRecovered: 0,
       totalRecovered: 0,
       loading: false,
+      location: "Global",
+      state: "Arkansas",
+      data: [],
       labels: [
         "New Confirmed",
         "Total Confirmed",
@@ -25,6 +28,8 @@ class App extends Component {
     };
 
     this.formatNumber = this.formatNumber.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.buildOptions = this.buildOptions.bind(this);
   }
   componentDidMount() {
     const url = `https://api.covid19api.com/summary`;
@@ -43,6 +48,19 @@ class App extends Component {
         });
       })
       .catch((error) => {});
+
+    const url2 = "https://covidtracking.com/api/v1/states/current.json";
+    Axios.get(url2)
+      .then((response) => {
+        this.setState({ data: response.data });
+        //set state to the entire data array at once onload when the
+        console.log(this.state.data);
+      })
+      .catch((error) => {});
+  }
+  handleChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
   formatNumber(num) {
     let str = "";
@@ -55,6 +73,25 @@ class App extends Component {
       str = "K";
     }
     return num.toFixed(1) + str;
+  }
+  buildOptions() {
+    //default list of states
+    const states = {
+      AL: "Alabama",
+      AK: "Alaska",
+      AZ: "Arizona",
+      AR: "Arkansas",
+    };
+    /* 
+    make arr sorted by state abbreviation
+
+    */
+    let arr = [];
+
+    for (const [key, value] of Object.entries(states)) {
+      arr.push(<option value={key}>{value}</option>);
+    }
+    return arr;
   }
   render() {
     const datasets = [
@@ -98,15 +135,15 @@ class App extends Component {
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="icon icon-tabler icon-tabler-world"
+              className="icon icon-tabler icon-tabler-world"
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              stroke-width="2"
+              strokeWidth="2"
               stroke="#607D8B"
               fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path stroke="none" d="M0 0h24v24H0z" />
               <circle cx="12" cy="12" r="9" />
@@ -116,7 +153,7 @@ class App extends Component {
               <path d="M12.5 3a17 17 0 0 1 0 18" />
             </svg>
 
-            <h3>Global Stats</h3>
+            <h3>{this.state.location} Stats</h3>
             <p>{`Total cases: ${this.formatNumber(
               this.state.totalConfirmed
             )}`}</p>
@@ -126,8 +163,12 @@ class App extends Component {
             <p>{`Total deaths: ${this.formatNumber(
               this.state.totalDeaths
             )}`}</p>
-            <select>
-              <option>Arkansas</option>
+            <select
+              value={this.state.state}
+              onChange={this.handleChange}
+              name="state"
+            >
+              {this.buildOptions()}
             </select>
           </div>
         )}
