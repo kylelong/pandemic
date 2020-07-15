@@ -15,7 +15,59 @@ class App extends Component {
       totalRecovered: 0,
       loading: false,
       location: "Global",
-      state: "Arkansas",
+      state: "NY",
+      states: {
+        AL: "Alabama",
+        AK: "Alaska",
+        AZ: "Arizona",
+        AR: "Arkansas",
+        CA: "California",
+        CO: "Colorado",
+        CT: "Connecticut",
+        DE: "Delaware",
+        FL: "Florida",
+        GA: "Georgia",
+        HI: "Hawaii",
+        ID: "Idaho",
+        IL: "Illinois",
+        IN: "Indiana",
+        IA: "Iowa",
+        KS: "Kansas",
+        KY: "Kentucky",
+        LA: "Louisiana",
+        ME: "Maine",
+        MD: "Maryland",
+        MA: "Massachuesetts",
+        MI: "Michigan",
+        MN: "Minnesota",
+        MS: "Mississippi",
+        MO: "Missouri",
+        MT: "Montana",
+        NE: "Nebraska",
+        NV: "Nevada",
+        NH: "New Hampshire",
+        NJ: "New Jersey",
+        NM: "New Mexico",
+        NY: "New York",
+        NC: "North Carolina",
+        ND: "North Dakota",
+        OH: "Ohio",
+        OK: "Oklahoma",
+        OR: "Oregon",
+        PA: "Pennsylvania",
+        RI: "Rhode Island",
+        SC: "South Carolina",
+        SD: "South Dakota",
+        TN: "Tennessee",
+        TX: "Texas",
+        UT: "Utah",
+        VT: "Vermont",
+        VA: "Virginia",
+        WA: "Washington",
+        WV: "West Virginia",
+        WI: "Wisconsin",
+        WY: "Wyoming",
+      },
       data: [],
       labels: [
         "New Confirmed",
@@ -30,6 +82,18 @@ class App extends Component {
     this.formatNumber = this.formatNumber.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.buildOptions = this.buildOptions.bind(this);
+    this.compare = this.compare.bind(this);
+  }
+  compare(a, b) {
+    const positiveA = a.positive;
+    const positiveB = b.positive;
+    let result = 0;
+    if (positiveA > positiveB) {
+      result = 1;
+    } else if (positiveA < positiveB) {
+      result = -1;
+    }
+    return result;
   }
   componentDidMount() {
     const url = `https://api.covid19api.com/summary`;
@@ -54,14 +118,36 @@ class App extends Component {
       .then((response) => {
         this.setState({ data: response.data });
         //set state to the entire data array at once onload when the
-        console.log(this.state.data);
+        this.state.data
+          .sort((a, b) => (a.positive > b.positive ? 1 : -1))
+          .reverse();
       })
       .catch((error) => {});
   }
+  //Handles changes for state dropdown menu
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+    this.setState({ state: value });
+    this.setState({ location: this.state.states[value] });
+    for (const [k, v] of Object.entries(this.state.data)) {
+      if (v.state === value) {
+        this.setState({ totalConfirmed: v.positive });
+        this.setState({ totalDeaths: v.death });
+        this.setState({
+          totalRecovered: v.recovered == null ? 0 : v.recovered,
+        });
+        this.setState({ newDeaths: v.deathIncrease });
+        //newConfirmed
+        this.setState({ newConfirmed: v.positiveIncrease });
+        //newRecovered
+        this.setState({ newRecovered: 0 }); //put + N/A as text
+      }
+    }
   }
+  /* 
+  
+  */
   formatNumber(num) {
     let str = "";
     if (num > 1e6) {
@@ -74,23 +160,27 @@ class App extends Component {
     }
     return num.toFixed(1) + str;
   }
+
+  //Builds the options list for list of states
   buildOptions() {
+    let abbrv = [];
+    this.state.data.forEach((element) => abbrv.push(element.state));
     //default list of states
-    const states = {
-      AL: "Alabama",
-      AK: "Alaska",
-      AZ: "Arizona",
-      AR: "Arkansas",
-    };
+
     /* 
     make arr sorted by state abbreviation
-
     */
     let arr = [];
+    abbrv.forEach((element) => {
+      if (Object.keys(this.state.states).indexOf(element) !== -1) {
+        arr.push(
+          <option key={element} value={element}>
+            {this.state.states[element]}
+          </option>
+        );
+      }
+    });
 
-    for (const [key, value] of Object.entries(states)) {
-      arr.push(<option value={key}>{value}</option>);
-    }
     return arr;
   }
   render() {
@@ -117,7 +207,13 @@ class App extends Component {
     return (
       <div className="container">
         <h3 id="headerText">Pandemic Visualization</h3>
-        <img src={medicine} alt="logo" height="300" width="300" />
+        <img
+          src={medicine}
+          className="img"
+          alt="logo"
+          height="300"
+          width="300"
+        />
 
         <Doughnut
           data={{
@@ -132,10 +228,11 @@ class App extends Component {
         <br />
         {this.state.loading && <p>Loading...</p>}
         {this.state.loading === false && (
-          <div>
+          <div id="data">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="icon icon-tabler icon-tabler-world"
+              id="world"
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -152,17 +249,7 @@ class App extends Component {
               <path d="M11.5 3a17 17 0 0 0 0 18" />
               <path d="M12.5 3a17 17 0 0 1 0 18" />
             </svg>
-
-            <h3>{this.state.location} Stats</h3>
-            <p>{`Total cases: ${this.formatNumber(
-              this.state.totalConfirmed
-            )}`}</p>
-            <p>{`Total recovered: ${this.formatNumber(
-              this.state.totalRecovered
-            )}`}</p>
-            <p>{`Total deaths: ${this.formatNumber(
-              this.state.totalDeaths
-            )}`}</p>
+            <h3>{this.state.location} Statistics</h3>
             <select
               value={this.state.state}
               onChange={this.handleChange}
@@ -170,6 +257,20 @@ class App extends Component {
             >
               {this.buildOptions()}
             </select>
+
+            <p>{`Total cases: ${this.formatNumber(
+              this.state.totalConfirmed
+            )}`}</p>
+            <p>
+              {this.state.totalRecovered === 0
+                ? "Total recovered: N/A"
+                : `Total recovered: ${this.formatNumber(
+                    this.state.totalRecovered
+                  )}`}
+            </p>
+            <p>{`Total deaths: ${this.formatNumber(
+              this.state.totalDeaths
+            )}`}</p>
           </div>
         )}
       </div>

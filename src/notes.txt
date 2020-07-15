@@ -1,15 +1,88 @@
-    this.state.datasets[0].data = [
-      this.state.newConfirmed,
-      this.state.totalConfirmed,
-      this.state.newDeaths,
-      this.state.totalDeaths,
-      this.state.newRecovered,
-      this.state.totalRecovered,
-    ];
-     this.state.datasets[0].data.map()
-    this.state.datasets[0].data.map((x) => console.log(x * 2));
-    this.state.datasets[0].data.map((x, index) => console.log(x * 2, index));
-    this.state.datasets[0].data.map((x, index) =>
-      console.log(this.state.datasets[0].data[index]);
-     
-    );
+     <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="icon icon-tabler icon-tabler-world"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="#607D8B"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" />
+              <circle cx="12" cy="12" r="9" />
+              <line x1="3.6" y1="9" x2="20.4" y2="9" />
+              <line x1="3.6" y1="15" x2="20.4" y2="15" />
+              <path d="M11.5 3a17 17 0 0 0 0 18" />
+              <path d="M12.5 3a17 17 0 0 1 0 18" />
+            </svg>
+
+            Sort by most increasing later
+
+                let arr = [];
+    for (const [key, value] of Object.entries(states)) {
+      arr.push(
+        <option key={key} value={key}>
+          {value}
+        </option>
+      );
+    }
+    return arr;
+
+       const states = {
+      AL: "Alabama",
+      AK: "Alaska",
+      AZ: "Arizona",
+      AR: "Arkansas",
+      CA: "California",
+      CO: "Colorado",
+      CT: "Connecticut",
+      DE: "Delaware",
+      FL: "Florida",
+      GA: "Georgia",
+      HI: "Hawaii",
+      ID: "Idaho",
+      IL: "Illinois",
+      IN: "Indiana",
+      IA: "Iowa",
+      KS: "Kansas",
+      KY: "Kentucky",
+      LA: "Louisiana",
+      ME: "Maine",
+      MD: "Maryland",
+      MA: "Massachuesetts",
+      MI: "Michigan",
+      MN: "Minnesota",
+      MS: "Mississippi",
+      MO: "Missouri",
+      MT: "Montana",
+      NE: "Nebraska",
+      NV: "Nevada",
+      NH: "New Hampshire",
+      NJ: "New Jersey",
+      NM: "New Mexico",
+      NY: "New York",
+      NC: "North Carolina",
+      ND: "North Dakota",
+      OH: "Ohio",
+      OK: "Oklahoma",
+      OR: "Oregon",
+      PA: "Pennsylvania",
+      RI: "Rhode Island",
+      SC: "South Carolina",
+      SD: "South Dakota",
+      TN: "Tennessee",
+      TX: "Texas",
+      UT: "Utah",
+      VT: "Vermont",
+      VA: "Virginia",
+      WA: "Washington",
+      WV: "West Virginia",
+      WI: "Wisconsin",
+      WY: "Wyoming",
+    };
+
+             {/* {`Total recovered: ${this.formatNumber(
+                this.state.totalRecovered
+              )}`} */}
