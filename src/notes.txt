@@ -86,3 +86,19 @@
              {/* {`Total recovered: ${this.formatNumber(
                 this.state.totalRecovered
               )}`} */}
+
+                  for (const [k, v] of Object.entries(this.state.data)) {
+      if (v.state === value) {
+        console.log(k);
+        this.setState({ totalConfirmed: v.positive });
+        this.setState({ totalDeaths: v.death });
+        this.setState({
+          totalRecovered: v.recovered == null ? 0 : v.recovered,
+        });
+        this.setState({ newDeaths: v.deathIncrease });
+        //newConfirmed
+        this.setState({ newConfirmed: v.positiveIncrease });
+        //newRecovered
+        this.setState({ newRecovered: 0 }); //put + N/A as text
+      }
+    }

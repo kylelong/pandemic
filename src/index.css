@@ -38,3 +38,18 @@ code {
   top: 46px;
   right: 30px;
 }
+
+.link {
+  text-decoration: none;
+}
+.link h3 {
+  color: #4169e1;
+  font-family: sans-serif;
+  font-weight: lighter;
+}
+
+.link p {
+  color: black;
+}
+.news {
+}

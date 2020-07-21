@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import medicine from "./medicine.svg";
 import Axios from "axios";
 import { Doughnut } from "react-chartjs-2";
-
+import News from "./News";
 class App extends Component {
   constructor() {
     super();
@@ -13,6 +13,7 @@ class App extends Component {
       totalDeaths: 0,
       newRecovered: 0,
       totalRecovered: 0,
+      key: 0,
       loading: false,
       location: "Global",
       state: "NY",
@@ -130,8 +131,12 @@ class App extends Component {
     this.setState({ [name]: value });
     this.setState({ state: value });
     this.setState({ location: this.state.states[value] });
+    // this.state.data.forEach(function (item) {
+
+    // });
     for (const [k, v] of Object.entries(this.state.data)) {
       if (v.state === value) {
+        this.setState({ key: k });
         this.setState({ totalConfirmed: v.positive });
         this.setState({ totalDeaths: v.death });
         this.setState({
@@ -174,7 +179,7 @@ class App extends Component {
     abbrv.forEach((element) => {
       if (Object.keys(this.state.states).indexOf(element) !== -1) {
         arr.push(
-          <option key={element} value={element}>
+          <option key={this.state.key + element} value={element}>
             {this.state.states[element]}
           </option>
         );
@@ -214,7 +219,7 @@ class App extends Component {
           height="300"
           width="300"
         />
-
+        <News />
         <Doughnut
           data={{
             labels: this.state.labels,
