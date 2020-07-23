@@ -219,7 +219,6 @@ class App extends Component {
           height="300"
           width="300"
         />
-
         <Doughnut
           data={{
             labels: this.state.labels,

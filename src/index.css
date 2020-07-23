@@ -51,7 +51,13 @@ code {
 .link p {
   color: black;
 }
-
+@media (max-width: 776px) {
+  .news {
+    position: relative;
+    left: -10%;
+    width: 400px;
+  }
+}
 @media (min-width: 1200px) {
   .news {
     position: absolute;
