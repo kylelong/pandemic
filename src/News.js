@@ -20,6 +20,7 @@ class News extends Component {
   render() {
     return (
       <div className="news">
+        <h3 id="header">News</h3>
         <ul>
           {this.state.news.map((article) => (
             <NewsItem key={article.url} article={article} />

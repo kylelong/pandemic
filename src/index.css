@@ -51,6 +51,14 @@ code {
 .link p {
   color: black;
 }
+.news #header {
+  text-align: center;
+  border-bottom: 4px solid #4169e1;
+  width: 90%;
+  position: relative;
+  left: 40px;
+  padding-bottom: 5px;
+}
 @media (max-width: 776px) {
   .news {
     position: relative;
